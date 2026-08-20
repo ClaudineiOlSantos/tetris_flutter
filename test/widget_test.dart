@@ -10,6 +10,16 @@ void main() {
     expect(find.text('Nivel'), findsOneWidget);
     expect(find.text('Pontuacao'), findsOneWidget);
 
+    await tester.tap(find.text('Pausar'));
+    await tester.pump();
+    expect(find.text('PAUSADO'), findsOneWidget);
+
+    await tester.tap(find.text('Continuar').last);
+    await tester.pump();
+    expect(find.text('Pausar'), findsOneWidget);
+
+    expect(find.text('Reiniciar'), findsOneWidget);
+
     await tester.pumpWidget(const SizedBox.shrink());
   });
 }

@@ -7,10 +7,12 @@ class GamePanel extends StatelessWidget {
     super.key,
     required this.game,
     required this.onPauseToggle,
+    required this.onRestart,
   });
 
   final TetrisGame game;
   final VoidCallback onPauseToggle;
+  final VoidCallback onRestart;
 
   @override
   Widget build(BuildContext context) {
@@ -71,6 +73,19 @@ class GamePanel extends StatelessWidget {
               onPressed: onPauseToggle,
               child: Text(game.isPaused ? 'Continuar' : 'Pausar'),
             ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              style: OutlinedButton.styleFrom(
+                foregroundColor: const Color(0xFFE8FFFA),
+                side: const BorderSide(color: Color(0xFF5EEAD4)),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(6),
+                ),
+              ),
+              onPressed: onRestart,
+              icon: const Icon(Icons.restart_alt),
+              label: const Text('Reiniciar'),
+            ),
           ],
         ),
       ),
@@ -123,3 +138,4 @@ class _PanelValue extends StatelessWidget {
     );
   }
 }
+

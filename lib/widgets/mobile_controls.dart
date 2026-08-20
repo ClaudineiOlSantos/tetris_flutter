@@ -6,12 +6,14 @@ class MobileControls extends StatelessWidget {
     required this.onLeft,
     required this.onRight,
     required this.onRotate,
+    required this.onSoftDrop,
     required this.onHardDrop,
   });
 
   final VoidCallback onLeft;
   final VoidCallback onRight;
   final VoidCallback onRotate;
+  final VoidCallback onSoftDrop;
   final VoidCallback onHardDrop;
 
   @override
@@ -41,6 +43,13 @@ class MobileControls extends StatelessWidget {
           backgroundColor: const Color(0xFFFBBF24),
           foregroundColor: const Color(0xFF2F241D),
           onPressed: onRotate,
+        ),
+        _ControlButton(
+          icon: Icons.keyboard_arrow_down,
+          label: 'Queda suave',
+          backgroundColor: const Color(0xFF7C3AED),
+          foregroundColor: Colors.white,
+          onPressed: onSoftDrop,
         ),
         _ControlButton(
           icon: Icons.vertical_align_bottom,
@@ -92,3 +101,4 @@ class _ControlButton extends StatelessWidget {
     );
   }
 }
+
