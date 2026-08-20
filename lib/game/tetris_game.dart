@@ -132,7 +132,6 @@ class TetrisGame extends ChangeNotifier {
 
     while (_moveBy(1, 0)) {}
     _score += 2 * _level;
-    _updateLevelFromScore();
     _lockCurrentPiece();
     notifyListeners();
   }
@@ -238,9 +237,9 @@ class TetrisGame extends ChangeNotifier {
     if (clearedNow > 0) {
       _score += _scoreFor(clearedNow);
       _linesCleared += clearedNow;
-      _updateLevelFromScore();
     }
 
+    _updateLevelFromScore();
     _spawnPiece();
   }
 
@@ -281,3 +280,4 @@ class TetrisGame extends ChangeNotifier {
     }
   }
 }
+
