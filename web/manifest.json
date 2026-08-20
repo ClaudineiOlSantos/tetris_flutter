@@ -1,0 +1,11 @@
+{
+  "name": "Tetris Flutter",
+  "short_name": "Tetris",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#f7f3ea",
+  "theme_color": "#a84f1f",
+  "description": "Classic Tetris-style game built with Flutter.",
+  "orientation": "portrait-primary"
+}
+
