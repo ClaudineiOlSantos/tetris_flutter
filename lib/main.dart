@@ -138,17 +138,22 @@ class _TetrisScreenState extends State<TetrisScreen> {
                       maxHeight: constraints.maxHeight,
                       maxWidth: constraints.maxWidth,
                       onPauseToggle: _game.togglePause,
+                      onRestart: _restart,
                     )
                   : _MobileGameLayout(
                       game: _game,
                       maxHeight: constraints.maxHeight,
                       maxWidth: constraints.maxWidth,
                       onPauseToggle: _game.togglePause,
+                      onRestart: _restart,
                     );
               return Stack(
                 children: [
                   gameLayout,
-                  _PauseTransition(visible: _game.isPaused),
+                  _PauseTransition(
+                    visible: _game.isPaused,
+                    onResume: _game.togglePause,
+                  ),
                   _GameOverTransition(visible: _game.isGameOver),
                 ],
               );
@@ -166,16 +171,19 @@ class _DesktopGameLayout extends StatelessWidget {
     required this.maxHeight,
     required this.maxWidth,
     required this.onPauseToggle,
+    required this.onRestart,
   });
 
   final TetrisGame game;
   final double maxHeight;
   final double maxWidth;
   final VoidCallback onPauseToggle;
+  final VoidCallback onRestart;
 
   @override
   Widget build(BuildContext context) {
-    final boardWidth = min(390.0, min(maxHeight * 0.46, maxWidth - 290));
+    final availableHeight = max(0.0, maxHeight - 48);
+    final boardWidth = min(390.0, min(availableHeight / 2, maxWidth - 290));
     final boardHeight = boardWidth * 2;
 
     return Center(
@@ -195,6 +203,7 @@ class _DesktopGameLayout extends StatelessWidget {
               child: GamePanel(
                 game: game,
                 onPauseToggle: onPauseToggle,
+                onRestart: onRestart,
               ),
             ),
           ],
@@ -210,12 +219,14 @@ class _MobileGameLayout extends StatelessWidget {
     required this.maxHeight,
     required this.maxWidth,
     required this.onPauseToggle,
+    required this.onRestart,
   });
 
   final TetrisGame game;
   final double maxHeight;
   final double maxWidth;
   final VoidCallback onPauseToggle;
+  final VoidCallback onRestart;
 
   @override
   Widget build(BuildContext context) {
@@ -229,7 +240,11 @@ class _MobileGameLayout extends StatelessWidget {
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              _CompactScoreboard(game: game, onPauseToggle: onPauseToggle),
+              _CompactScoreboard(
+                game: game,
+                onPauseToggle: onPauseToggle,
+                onRestart: onRestart,
+              ),
               const SizedBox(height: 12),
               SizedBox(
                 width: boardWidth,
@@ -240,6 +255,7 @@ class _MobileGameLayout extends StatelessWidget {
                 onLeft: game.moveLeft,
                 onRight: game.moveRight,
                 onRotate: game.rotate,
+                onSoftDrop: game.softDrop,
                 onHardDrop: game.hardDrop,
               ),
             ],
@@ -254,10 +270,12 @@ class _CompactScoreboard extends StatelessWidget {
   const _CompactScoreboard({
     required this.game,
     required this.onPauseToggle,
+    required this.onRestart,
   });
 
   final TetrisGame game;
   final VoidCallback onPauseToggle;
+  final VoidCallback onRestart;
 
   @override
   Widget build(BuildContext context) {
@@ -278,6 +296,12 @@ class _CompactScoreboard extends StatelessWidget {
           ),
           const SizedBox(width: 10),
           IconButton(
+            tooltip: 'Reiniciar',
+            color: const Color(0xFF5EEAD4),
+            onPressed: onRestart,
+            icon: const Icon(Icons.restart_alt),
+          ),
+          IconButton(
             tooltip: game.isPaused ? 'Continuar' : 'Pausar',
             color: const Color(0xFF5EEAD4),
             onPressed: onPauseToggle,
@@ -292,9 +316,11 @@ class _CompactScoreboard extends StatelessWidget {
 class _PauseTransition extends StatelessWidget {
   const _PauseTransition({
     required this.visible,
+    required this.onResume,
   });
 
   final bool visible;
+  final VoidCallback onResume;
 
   @override
   Widget build(BuildContext context) {
@@ -312,14 +338,25 @@ class _PauseTransition extends StatelessWidget {
               color: const Color(0xFF14211F),
               border: Border.all(color: const Color(0xFF5EEAD4), width: 2),
             ),
-            child: const Text(
-              'PAUSADO',
-              style: TextStyle(
-                color: Color(0xFFE8FFFA),
-                fontSize: 26,
-                fontWeight: FontWeight.w900,
-                letterSpacing: 0,
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'PAUSADO',
+                  style: TextStyle(
+                    color: Color(0xFFE8FFFA),
+                    fontSize: 26,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 0,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                FilledButton.icon(
+                  onPressed: onResume,
+                  icon: const Icon(Icons.play_arrow),
+                  label: const Text('Continuar'),
+                ),
+              ],
             ),
           ),
         ),
@@ -423,3 +460,4 @@ class _MiniStat extends StatelessWidget {
     );
   }
 }
+
