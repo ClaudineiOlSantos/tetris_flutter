@@ -16,7 +16,7 @@ void main() {
 
     await tester.tap(find.text('Continuar').last);
     await tester.pump();
-    expect(find.text('PAUSADO'), findsNothing);
+    expect(find.text('Pausar'), findsOneWidget);
 
     expect(find.text('Reiniciar'), findsOneWidget);
 
